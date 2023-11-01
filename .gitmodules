@@ -1,0 +1,3 @@
+[submodule "NeuralFineGray"]
+	path = NeuralFineGray
+	url = git@github.com:Jeanselme/NeuralFineGray.git
