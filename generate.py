@@ -17,7 +17,7 @@ def generate(random_seed = 42, size = 10000, competing_risks = 2):
     x, z = make_blobs(n_samples = size, n_features = 2, centers = ([-1.5, -1.5], [1.5, 1.5]), random_state = random_seed)
     x = np.column_stack([x] + [np.random.normal(size = size) for _ in range(10)]) 
 
-    betas = {event: np.array([np.random.normal(size = 12) for _ in np.unique(z)]) for event in range(competing_risks)}
+    betas = {event: np.array([np.random.normal(size = 12) for _ in np.unique(z)]) / np.linspace(5, 10, 12) for event in range(competing_risks)}
 
     # Outcome
     outcomes = {
@@ -31,7 +31,7 @@ def generate(random_seed = 42, size = 10000, competing_risks = 2):
         outcomes[event + 1] = gompertz.rvs(params, random_state = random_seed)
 
     # Create censoring
-    outcomes[0] = gompertz.rvs(np.exp(np.random.random(len(x))) / 5, random_state = random_seed)
+    outcomes[0] = gompertz.rvs(np.exp(np.random.random(len(x))) / 2, random_state = random_seed)
 
     outcomes = pd.DataFrame.from_dict(outcomes)
     outcomes['duration'], outcomes['event'] = outcomes.min(axis = 1), outcomes.idxmin(axis = 1)
@@ -49,4 +49,4 @@ def compute_cif(x, betas, z, times):
         c2 = np.exp((betas[1 - event][z] * x.drop(columns = 'z')).sum(1))
         cif[event + 1] = pd.DataFrame(np.vstack([c1_ / (c1_ + c2_) * gompertz.cdf(times, c1_ + c2_) for c1_, c2_ in zip(c1, c2)]), columns = times)
 
-    return pd.concat(cif, 1)
+    return pd.concat(cif, axis = 1)
