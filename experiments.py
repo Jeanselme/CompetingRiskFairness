@@ -18,7 +18,7 @@ x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
 
 # Hyperparameters
 max_epochs = 1000
-grid_search = 10
+grid_search = 100
 layers = [[i] * (j + 1) for i in [25, 50] for j in range(4)]
 layers_large = [[i] * (j + 1) for i in [25, 50] for j in range(8)]
 batch = [1000]
@@ -41,8 +41,6 @@ param_grid = {
     'epochs': [max_epochs],
     'learning_rate' : [1e-3, 1e-4],
     'batch': batch,
-    
-    'dropout': [0., 0.25, 0.5, 0.75],
 
     'layers_surv': layers,
     'layers' : layers,
