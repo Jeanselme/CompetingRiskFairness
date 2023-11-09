@@ -33,8 +33,8 @@ param_grid = {
     'distribution' : ['LogNormal', 'Weibull'],
     'layers' : layers_large,
 }
-DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsm'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, e)
-DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsmnc'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, (e == 1).astype(int))
+DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsm'.format(random_seed), random_seed = random_seed).train(x, t, e)
+DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsmnc'.format(random_seed), random_seed = random_seed).train(x, t, (e == 1).astype(int))
 
 # NFG Competing risk
 param_grid = {
@@ -45,31 +45,35 @@ param_grid = {
     'layers_surv': layers,
     'layers' : layers,
 }
-NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfg'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, e)
-NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgnc'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, (e == 1).astype(int))
-NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgcs'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, e, cause_specific = True)
+NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
+NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgnc'.format(random_seed), random_seed = random_seed).train(x, t, (e == 1).astype(int))
+NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgcs'.format(random_seed), random_seed = random_seed).train(x, t, e, cause_specific = True)
 
 # Desurv
-param_grid = {
-    'epochs': [max_epochs],
-    'learning_rate' : [1e-3, 1e-4],
-    'batch': batch,
+for n in [2, 5, 15, 100]:
+    param_grid = {
+        'epochs': [max_epochs],
+        'learning_rate' : [1e-3, 1e-4],
+        'batch': batch,
+        'n': [n],
 
-    'layers_surv': layers_large,
-    'layers': layers_large,
-    'act': ['Tanh'],
-}
-DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_ds'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, e)
-DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsnc'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, (e == 1).astype(int))
+        'layers_surv': layers_large,
+        'layers': layers_large,
+        'act': ['Tanh'],
+    }
+    DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_ds{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
+    DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsnc{}'.format(random_seed, n), random_seed = random_seed).train(x, t, (e == 1).astype(int))
 
 # DeepHit Competing risk
-param_grid = {
-    'epochs': [max_epochs],
-    'learning_rate' : [1e-3, 1e-4],
-    'batch': batch,
+for n in [2, 5, 15, 100]:
+    param_grid = {
+        'epochs': [max_epochs],
+        'learning_rate' : [1e-3, 1e-4],
+        'batch': batch,
+        'n': [n],
 
-    'nodes' : layers,
-    'shared' : layers
-}
-DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dh'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, e)
-DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dhnc'.format(random_seed), random_seed = random_seed, delete_log = True).train(x, t, (e == 1).astype(int))
+        'nodes' : layers,
+        'shared' : layers
+    }
+    DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dh{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
+    DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dhnc{}'.format(random_seed, n), random_seed = random_seed).train(x, t, (e == 1).astype(int))
