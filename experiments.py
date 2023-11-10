@@ -52,7 +52,7 @@ NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/ge
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgcs'.format(random_seed), random_seed = random_seed).train(x, t, e, cause_specific = True)
 
 # Desurv
-for n in [2, 5, 15, 100]:
+for n in [2, 5, 15]:
     param_grid = {
         'epochs': [max_epochs],
         'learning_rate' : [1e-3, 1e-4],
