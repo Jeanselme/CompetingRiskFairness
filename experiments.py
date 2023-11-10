@@ -45,6 +45,7 @@ param_grid = {
 
     'layers_surv': layers,
     'layers' : layers,
+    'act': ['Tanh']
 }
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgnc'.format(random_seed), random_seed = random_seed).train(x, t, (e == 1).astype(int))
