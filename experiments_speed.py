@@ -21,6 +21,18 @@ max_epochs = 1000
 grid_search = 1
 batch = [1000]
 
+param_grid = {
+    'epochs': [max_epochs],
+    'learning_rate' : [1e-3],
+    'batch': batch,
+
+    'k' : [4],
+    'distribution' : ['Weibull'],
+    'layers' : [[50] * 3],
+}
+DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dsm'.format(random_seed), random_seed = random_seed).train(x, t, e)
+
+
 # NFG Competing risk
 param_grid = {
     'epochs': [max_epochs],
