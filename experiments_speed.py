@@ -1,0 +1,62 @@
+
+# Comparsion models for competing risks
+# In this script we train the different models for competing risks
+import sys
+from generate import *
+from experiment import *
+
+# Select random seed
+random_seed = int(sys.argv[1])
+
+print("Script running experiments on generated data with seed =", random_seed)
+x, t, e, _, _ = generate(random_seed) 
+
+# Normalise data
+x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
+            t.values.astype(float),\
+            e.values.astype(int)
+
+# Hyperparameters
+max_epochs = 1000
+grid_search = 1
+batch = [1000]
+
+# NFG Competing risk
+param_grid = {
+    'epochs': [max_epochs],
+    'learning_rate' : [1e-3],
+    'batch': batch,
+    'dropout': [0],
+
+    'layers_surv': [[50, 50]],
+    'layers' : [[50]],
+    'act': ['Tanh']
+}
+NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
+
+# Desurv
+for n in [1, 2, 15]:
+    param_grid = {
+        'epochs': [max_epochs],
+        'learning_rate' : [1e-3],
+        'batch': batch,
+        'n': [n],
+
+        'layers_surv': [[50] * 3],
+        'layers': [[50] * 3],
+        'act': ['Tanh'],
+    }
+    DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_ds{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
+
+# DeepHit Competing risk
+for n in [2, 15, 100]:
+    param_grid = {
+        'epochs': [max_epochs],
+        'learning_rate' : [1e-3],
+        'batch': batch,
+        'n': [n],
+
+        'nodes' : [[50, 50]],
+        'shared' : [[50]]
+    }
+    DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dh{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
