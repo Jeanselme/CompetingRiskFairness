@@ -32,6 +32,7 @@ param_grid = {
 }
 DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dsm'.format(random_seed), random_seed = random_seed).train(x, t, e)
 
+
 # NFG Competing risk
 param_grid = {
     'epochs': [max_epochs],
@@ -46,24 +47,28 @@ param_grid = {
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
 
 # Desurv
-param_grid = {
-    'epochs': [max_epochs],
-    'learning_rate' : [1e-3],
-    'batch': batch,
+for n in [1, 2, 5, 15]:
+    param_grid = {
+        'epochs': [max_epochs],
+        'learning_rate' : [1e-3],
+        'batch': batch,
+        'n': [n],
 
-    'layers_surv': [[50] * 3],
-    'layers': [[50] * 3],
-    'act': ['Tanh'],
-}
-DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_ds'.format(random_seed), random_seed = random_seed).train(x, t, e)
+        'layers_surv': [[50] * 3],
+        'layers': [[50] * 3],
+        'act': ['Tanh'],
+    }
+    DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_ds{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
 
 # DeepHit Competing risk
-param_grid = {
-    'epochs': [max_epochs],
-    'learning_rate' : [1e-3],
-    'batch': batch,
+for n in [15, 100, 1000]:
+    param_grid = {
+        'epochs': [max_epochs],
+        'learning_rate' : [1e-3],
+        'batch': batch,
+        'n': [n],
 
-    'nodes' : [[50, 50]],
-    'shared' : [[50]]
-}
-DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dh'.format(random_seed), random_seed = random_seed).train(x, t, e)
+        'nodes' : [[50, 50]],
+        'shared' : [[50]]
+    }
+    DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dh{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
