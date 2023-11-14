@@ -39,11 +39,9 @@ param_grid = {
     'epochs': [max_epochs],
     'learning_rate' : [1e-3],
     'batch': batch,
-    'dropout': [0],
 
     'layers_surv': [[50, 50]],
-    'layers' : [[50]],
-    'act': ['Tanh']
+    'layers' : [[50]]
 }
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
 
