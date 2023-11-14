@@ -54,8 +54,7 @@ for n in [1, 2, 5, 15]:
         'n': [n],
 
         'layers_surv': [[50] * 3],
-        'layers': [[50] * 3],
-        'act': ['Tanh'],
+        'layers': [[50] * 3]
     }
     DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_ds{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
 
