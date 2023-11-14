@@ -29,7 +29,7 @@ for n in [2, 5, 15]:
 
         'k' : [n],
         'distribution' : ['Weibull'],
-        'layers' : [[50] * 3],
+        'layers' : [[50] * 6],
     }
     DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dsm{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
 
@@ -40,8 +40,8 @@ param_grid = {
     'learning_rate' : [1e-3],
     'batch': batch,
 
-    'layers_surv': [[50, 50]],
-    'layers' : [[50]]
+    'layers_surv': [[50] * 3],
+    'layers': [[50] * 3]
 }
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
 
@@ -66,7 +66,7 @@ for n in [15, 100, 1000]:
         'batch': batch,
         'n': [n],
 
-        'nodes' : [[50, 50]],
-        'shared' : [[50]]
+        'nodes' : [[50] * 3],
+        'shared' : [[50] * 3]
     }
     DeepHitExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dh{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
