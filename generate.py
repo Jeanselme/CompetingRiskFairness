@@ -36,7 +36,8 @@ def generate(random_seed = 42, size = 10000):
     events = 2 - bernoulli.rvs(hazard_ratio)
 
     # Create censoring
-    censoring = gompertz.rvs(np.exp(np.random.random(len(x))), random_state = random_seed)
+    censoring_beta = np.random.normal(size = 12) / 10
+    censoring = gompertz.rvs(scale(censoring_beta, x), random_state = random_seed)
     events = (censoring > outcomes) * events
     outcomes = (censoring > outcomes) * outcomes + (censoring <= outcomes) * censoring
 
