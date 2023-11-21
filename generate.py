@@ -15,9 +15,11 @@ def generate(random_seed = 42, size = 10000):
 
         return x, t, e, betas, z
     """
+    # Set seed for the experiment
     np.random.seed(random_seed)
+    
     # Data - Generate two blobs
-    x, z = make_blobs(n_samples = size, n_features = 2, centers = ([-1.5, -1.5], [1.5, 1.5]), random_state = random_seed)
+    x, z = make_blobs(n_samples = size, n_features = 2, centers = ([-1.5, -1.5], [1.5, 1.5]))
     x = np.column_stack([x] + [np.random.normal(size = size) for _ in range(10)]) 
 
     # Generate parameters for each gompretz cause specific hazards
@@ -29,7 +31,7 @@ def generate(random_seed = 42, size = 10000):
     s1 = shape1(parameters[1][z], x)
     s2 = shape2(parameters[2][z], x)
     sc = scale(parameters[0][z], x)
-    outcomes = gompertz.rvs(s1 + s2, scale = sc, random_state = random_seed)
+    outcomes = gompertz.rvs(s1 + s2, scale = sc)
 
     # Assign the outcomes following Bernoulli draw
     hazard_ratio = s1 / (s1 + s2)
@@ -37,7 +39,7 @@ def generate(random_seed = 42, size = 10000):
 
     # Create censoring
     censoring_beta = np.random.normal(size = 12) / 10
-    censoring = gompertz.rvs(scale(censoring_beta, x), random_state = random_seed)
+    censoring = gompertz.rvs(scale(censoring_beta, x))
     events = (censoring > outcomes) * events
     outcomes = (censoring > outcomes) * outcomes + (censoring <= outcomes) * censoring
 
