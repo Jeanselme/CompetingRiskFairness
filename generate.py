@@ -3,9 +3,9 @@ import pandas as pd
 from scipy.stats import gompertz, bernoulli
 from sklearn.datasets import make_blobs
 
-shape1 = lambda p, x: ((p * x) ** 2).sum(1)
-shape2 = lambda p, x: np.exp((p * x).sum(1))
-scale =  lambda p, x: np.exp((p * x).sum(1))
+shape1 = lambda p, x: ((p * x / 5) ** 2).sum(1)
+shape2 = lambda p, x: np.exp((p * x / 5).sum(1))
+scale =  lambda p, x: np.exp((p * x / 15).sum(1))
 
 def generate(random_seed = 42, size = 10000):
     """
@@ -17,15 +17,14 @@ def generate(random_seed = 42, size = 10000):
     """
     # Set seed for the experiment
     np.random.seed(random_seed)
-    
+
     # Data - Generate two blobs
     x, z = make_blobs(n_samples = size, n_features = 2, centers = ([-1.5, -1.5], [1.5, 1.5]))
     x = np.column_stack([x] + [np.random.normal(size = size) for _ in range(10)]) 
 
     # Generate parameters for each gompretz cause specific hazards
     # parameters[0] is used for scale of the gompretz shared across risk
-    parameters = {event: np.array([np.random.normal(size = 12) for _ in np.unique(z)]) / 3 for event in range(3)}
-    parameters[0] /= 5
+    parameters = {event: np.array([np.random.normal(size = 12) for _ in np.unique(z)]) for event in range(3)}
 
     # Generate the data with the summed hazard
     s1 = shape1(parameters[1][z], x)
@@ -38,7 +37,7 @@ def generate(random_seed = 42, size = 10000):
     events = 2 - bernoulli.rvs(hazard_ratio)
 
     # Create censoring
-    censoring_beta = np.random.normal(size = 12) / 10
+    censoring_beta = np.random.normal(size = 12)
     censoring = gompertz.rvs(scale(censoring_beta, x))
     events = (censoring > outcomes) * events
     outcomes = (censoring > outcomes) * outcomes + (censoring <= outcomes) * censoring
