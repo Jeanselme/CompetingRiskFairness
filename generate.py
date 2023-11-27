@@ -3,8 +3,8 @@ import pandas as pd
 from scipy.stats import gompertz, bernoulli
 from sklearn.datasets import make_blobs
 
-shape1 = lambda p, x: ((p * x / 5) ** 2).sum(1)
-shape2 = lambda p, x: np.exp((p * x / 5).sum(1))
+shape1 = lambda p, x: np.exp((p * x / 5).sum(1))
+shape2 = lambda p, x: ((p * x / 5) ** 2).sum(1)
 scale =  lambda p, x: np.exp((p * x / 15).sum(1))
 
 def generate(random_seed = 42, size = 10000):
@@ -37,8 +37,8 @@ def generate(random_seed = 42, size = 10000):
     events = 2 - bernoulli.rvs(hazard_ratio)
 
     # Create censoring
-    censoring_beta = np.random.normal(size = 12)
-    censoring = gompertz.rvs(scale(censoring_beta, x))
+    censoring_beta = np.random.normal(size = 12) 
+    censoring = gompertz.rvs(shape2(censoring_beta, x))
     events = (censoring > outcomes) * events
     outcomes = (censoring > outcomes) * outcomes + (censoring <= outcomes) * censoring
 
