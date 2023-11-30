@@ -39,6 +39,7 @@ param_grid = {
     'epochs': [max_epochs],
     'learning_rate' : [1e-3],
     'batch': batch,
+    'patience_max': [2], # To match DSM
 
     'layers_surv': [[50] * 3],
     'layers': [[50] * 3]
@@ -52,6 +53,8 @@ for n in [1, 5, 15]:
         'learning_rate' : [1e-3],
         'batch': batch,
         'n': [n],
+        'patience_max': [2], # To match DSM
+        'multihead': [True], # To ensure same architecture than NFG
 
         'layers_surv': [[50] * 3],
         'layers': [[50] * 3]
