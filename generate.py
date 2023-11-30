@@ -3,9 +3,11 @@ import pandas as pd
 from scipy.stats import gompertz, bernoulli
 from sklearn.datasets import make_blobs
 
-shape1 = lambda p, x: np.exp((p * x / 5).sum(1))
-shape2 = lambda p, x: ((p * x / 5) ** 2).sum(1)
-scale =  lambda p, x: np.exp((p * x / 15).sum(1))
+shape = {
+        0 : lambda p, x: np.exp(((p * x)[:, -3:] ** 2).mean(1)),
+        1 : lambda p, x: np.exp(((p * x)[:, -3:] ** 2).mean(1) + ((p * x)[:, 2:5]).mean(1)),
+        2 : lambda p, x: np.exp(((p * x)[:, -3:] ** 2).mean(1) + ((p * x)[:, 5:8]).mean(1))
+    }
 
 def generate(random_seed = 42, size = 10000):
     """
@@ -20,25 +22,23 @@ def generate(random_seed = 42, size = 10000):
 
     # Data - Generate two blobs
     x, z = make_blobs(n_samples = size, n_features = 2, centers = ([-1.5, -1.5], [1.5, 1.5]))
-    x = np.column_stack([x] + [np.random.normal(size = size) for _ in range(10)]) 
+    x = np.column_stack([x] + [np.random.normal(size = size) for _ in range(9)]) 
 
     # Generate parameters for each gompretz cause specific hazards
-    # parameters[0] is used for scale of the gompretz shared across risk
-    parameters = {event: np.array([np.random.normal(size = 12) for _ in np.unique(z)]) for event in range(3)}
+    parameters = {event: np.array([np.random.normal(size = 11) for _ in np.unique(z)]) for event in [1, 2]}
 
     # Generate the data with the summed hazard
-    s1 = shape1(parameters[1][z], x)
-    s2 = shape2(parameters[2][z], x)
-    sc = scale(parameters[0][z], x)
-    outcomes = gompertz.rvs(s1 + s2, scale = sc)
+    s1 = shape[1](parameters[1][z], x)
+    s2 = shape[2](parameters[2][z], x)
+    outcomes = gompertz.rvs(s1 + s2)
 
     # Assign the outcomes following Bernoulli draw
     hazard_ratio = s1 / (s1 + s2)
     events = 2 - bernoulli.rvs(hazard_ratio)
 
-    # Create censoring
-    censoring_beta = np.random.normal(size = 12) 
-    censoring = gompertz.rvs(shape2(censoring_beta, x))
+    # Create censoring NON RANDOM
+    censoring_beta = np.random.normal(size = 11) / 2
+    censoring = gompertz.rvs(shape[0](censoring_beta, x))
     events = (censoring > outcomes) * events
     outcomes = (censoring > outcomes) * outcomes + (censoring <= outcomes) * censoring
 
@@ -51,11 +51,9 @@ def compute_cif(x, betas, z, times):
     # As we know each cause specific hazard, we can model the associated gompretz
     cif = {}
     x = x.drop(columns = 'z')
-    shape = {1: shape1(betas[1][z], x),
-             2: shape2(betas[2][z], x)}
-    sc = scale(betas[0][z], x)
+    shape_x = {event: shape[event](betas[event][z], x.values) for event in [1, 2]}
     for event in [1, 2]:
-        hazard_ratio = shape[event] / (shape[1] + shape[2])
-        cif[event] = pd.DataFrame(np.vstack([r * gompertz.cdf(times, sh, scale = s) for r, sh, s in zip(hazard_ratio, shape[event], sc)]), columns = times)
+        hazard_ratio = shape_x[event] / (shape_x[1] + shape_x[2])
+        cif[event] = pd.DataFrame(np.vstack([r * gompertz.cdf(times, sh) for r, sh in zip(hazard_ratio, shape_x[event])]), columns = times)
 
     return pd.concat(cif, axis = 1)
