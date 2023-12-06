@@ -17,7 +17,7 @@ x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
             e.values.astype(int)
 
 # Hyperparameters
-max_epochs = 1000
+max_epochs = 10000
 grid_search = 1
 batch = [1000]
 
@@ -33,16 +33,16 @@ for n in [2, 5]:
     }
     DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_dsm{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
 
-
 # NFG Competing risk
 param_grid = {
     'epochs': [max_epochs],
     'learning_rate' : [1e-3],
     'batch': batch,
-    'patience_max': [2], # To match DSM
-
+    'patience_max': [3],
+    'multihead': [True],
     'layers_surv': [[50] * 3],
-    'layers': [[50] * 3]
+    'layers': [[50] * 3], 
+    'act': ['Tanh']
 }
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_nfg'.format(random_seed), random_seed = random_seed).train(x, t, e)
 
@@ -53,11 +53,11 @@ for n in [1, 5, 15]:
         'learning_rate' : [1e-3],
         'batch': batch,
         'n': [n],
-        'patience_max': [2], # To match DSM
-        'multihead': [True], # To ensure same architecture than NFG
-
+        'multihead': [True],
+        'patience_max': [3],
         'layers_surv': [[50] * 3],
-        'layers': [[50] * 3]
+        'layers': [[50] * 3], 
+        'act': ['Tanh']
     }
     DeSurvExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results_speed/generate={}_ds{}'.format(random_seed, n), random_seed = random_seed).train(x, t, e)
 
@@ -68,7 +68,6 @@ for n in [15, 100]:
         'learning_rate' : [1e-3],
         'batch': batch,
         'n': [n],
-
         'nodes' : [[50] * 3],
         'shared' : [[50] * 3]
     }

@@ -18,23 +18,23 @@ x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
 
 # Hyperparameters
 max_epochs = 1000
-grid_search = 100
+grid_search = 10
 layers = [[i] * (j + 1) for i in [25, 50] for j in range(4)]
 layers_large = [[i] * (j + 1) for i in [25, 50] for j in range(8)]
 batch = [1000]
 
-# DSM
-param_grid = {
-    'epochs': [max_epochs],
-    'learning_rate' : [1e-3, 1e-4],
-    'batch': batch,
+# # DSM
+# param_grid = {
+#     'epochs': [max_epochs],
+#     'learning_rate' : [1e-3, 1e-4],
+#     'batch': batch,
 
-    'k' : [2, 3, 4, 5],
-    'distribution' : ['LogNormal', 'Weibull'],
-    'layers' : layers_large,
-}
-DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsm'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, e)
-DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsmnc'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, (e == 1).astype(int))
+#     'k' : [2, 3, 4, 5],
+#     'distribution' : ['LogNormal', 'Weibull'],
+#     'layers' : layers_large,
+# }
+# DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsm'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, e)
+# DSMExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_dsmnc'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, (e == 1).astype(int))
 
 # NFG Competing risk
 param_grid = {
