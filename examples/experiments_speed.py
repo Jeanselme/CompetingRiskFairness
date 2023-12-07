@@ -17,7 +17,7 @@ x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
             e.values.astype(int)
 
 # Hyperparameters
-max_epochs = 10000
+max_epochs = 1000
 grid_search = 1
 batch = [500]
 
