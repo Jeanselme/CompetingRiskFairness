@@ -29,9 +29,9 @@ def generate(random_seed = 42, size = 10000):
     parameters = {event: np.array([np.random.normal(size = 11) for _ in np.unique(z)]) for event in [-1, 1, 2]}
 
     # Generate the data with the summed hazard
-    s1 = shape[1](parameters[1][z], x)
-    s2 = shape[2](parameters[2][z], x)
-    sc = shape[-1](parameters[-1][z], x)
+    s1 = shape[1](parameters[z], x)
+    s2 = shape[2](parameters[z], x)
+    sc = shape[-1](parameters[z], x)
     outcomes = gompertz.rvs(s1 + s2, sc)
 
     # Assign the outcomes following Bernoulli draw

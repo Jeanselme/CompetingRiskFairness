@@ -19,7 +19,7 @@ x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
 # Hyperparameters
 max_epochs = 10000
 grid_search = 1
-batch = [1000]
+batch = [500]
 
 for n in [2, 5]:
     param_grid = {
@@ -38,7 +38,7 @@ param_grid = {
     'epochs': [max_epochs],
     'learning_rate' : [1e-3],
     'batch': batch,
-    'patience_max': [3],
+    'patience_max': [2],
     'multihead': [True],
     'layers_surv': [[50] * 3],
     'layers': [[50] * 3], 
@@ -54,7 +54,7 @@ for n in [1, 5, 15]:
         'batch': batch,
         'n': [n],
         'multihead': [True],
-        'patience_max': [3],
+        'patience_max': [2],
         'layers_surv': [[50] * 3],
         'layers': [[50] * 3], 
         'act': ['Tanh']
