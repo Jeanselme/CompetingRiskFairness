@@ -21,7 +21,7 @@ max_epochs = 1000
 grid_search = 100
 layers = [[i] * (j + 1) for i in [25, 50] for j in range(4)]
 layers_large = [[i] * (j + 1) for i in [25, 50] for j in range(8)]
-batch = [100, 250]
+batch = [1000]
 
 # DSM
 param_grid = {

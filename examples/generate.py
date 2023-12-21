@@ -10,7 +10,7 @@ shape = {
         2 : lambda p, x: np.abs(((p * x)[:, :5] ** 2) + ((p * x)[:, 5:])).sum(1)  / 10
     }
 
-def generate(random_seed = 42, size = 50000):
+def generate(random_seed = 42, size = 30000):
     """
         Generate two clusters with different survival profiles
         Concatenate clusters and covariates for X
