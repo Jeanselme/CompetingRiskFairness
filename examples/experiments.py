@@ -49,6 +49,7 @@ param_grid = {
     'act': ['Tanh']
 }
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfg'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, e)
+NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgcs'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, e, cause_specific = True)
 NFGExperiment.create(param_grid, k = 1, n_iter = grid_search, path = 'Results/generate={}_nfgnc'.format(random_seed), delete_log =True, random_seed = random_seed).train(x, t, (e == 1).astype(int))
 
 # Desurv
