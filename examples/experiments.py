@@ -57,6 +57,7 @@ param_grid = {
     'epochs': [max_epochs],
     'learning_rate' : [1e-3, 1e-4],
     'batch': batch,
+    'embedding': [True], # To ensure same architecture
 
     'layers_surv': layers,
     'layers': layers,
