@@ -53,6 +53,7 @@ for n in [1, 5, 15]:
         'batch': batch,
         'n': [n],
         'multihead': [True],
+        'embedding': [True],
         'patience_max': [2],
         'layers_surv': [[50] * 3],
         'layers': [[50] * 3], 
