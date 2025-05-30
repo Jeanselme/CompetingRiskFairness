@@ -58,3 +58,21 @@ def compute_cif(x, betas, z, times):
         cif[event] = pd.DataFrame(np.vstack([r * gompertz.cdf(times, sh, sc) for r, sh, sc in zip(hazard_ratio, shape_x[event], shape_x[-1])]), columns = times)
 
     return pd.concat(cif, axis = 1)
+
+def conditional_survival(w1, w2, ws, times, t_eval):
+    max_time = np.searchsorted(times, t_eval)
+
+    F2 = gompertz.cdf(times[:max_time], w2, ws)
+    f1 = gompertz.pdf(times[:max_time], w1, ws)
+
+    numerator = np.trapz(F2 * f1, times[:max_time])
+    denominator = gompertz.cdf(t_eval, w1, ws)
+    return numerator / denominator if denominator != 0 else 0
+
+def conditional_probability(x, betas, z, times, t_eval):
+    shape_x = {event: shape[event](betas[event][z], x.values) for event in [-1, 1, 2]}
+    return pd.DataFrame({t: np.array([
+        conditional_survival(w1, w2, ws, times, t) for w1, w2, ws in zip(shape_x[1], shape_x[2], shape_x[-1])]) 
+        for t in t_eval}, index = x.index)
+
+
