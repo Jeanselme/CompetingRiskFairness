@@ -12,7 +12,7 @@ To set up the environment:
 To reproduce the paper's results on cardiovascular management:  
 
 3. Run `NeuralFineGray/examples/experiment_competing_risk.py FRAMINGHAM` to run all models on the `FRAMINGHAM` dataset.
-4. Analysis using `NeuralFineGray/examples/Analysis.ipynb` to measure performance and bias resulting from ignoring competing risks.
+4. Analysis using `examples/Analysis FRAMINGHAM.ipynb` to measure performance and bias resulting from ignoring competing risks.
 
 To reproduce the synthetic results:  
 
