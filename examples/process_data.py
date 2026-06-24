@@ -4,11 +4,14 @@ from generate import *
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import ShuffleSplit, train_test_split
 
-# Select random seed
+# Read arguments: seed, number of causes, dimensions
 random_seed = int(sys.argv[1])
+causes      = int(sys.argv[2]) if len(sys.argv) > 2 else 2
+dim         = int(sys.argv[3]) if len(sys.argv) > 3 else 10
 
-print("Script running experiments on generated data with seed =", random_seed)
-x, t, e, _, _ = generate(random_seed) 
+print(f"Script running experiments on generated data with seed={random_seed}, "
+      f"causes={causes}, dim={dim}")
+x, t, e, _, _ = generate(random_seed, causes=list(range(1, causes + 1)), dim=dim)
 
 # Normalise data
 x, t, e = StandardScaler().fit_transform(x.values).astype(float),\
