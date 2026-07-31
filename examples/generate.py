@@ -93,7 +93,7 @@ def generate(random_seed=42, size=30000, causes=(1, 2), dim=10):
 def compute_cif(x, betas, z, times):
     # causes and dim are read back out of betas, not re-specified here,
     # so this always matches whatever generate() was actually called with.
-    causes = sorted(k for k in betas if k != -1)
+    causes = sorted(k for k in betas if k > 0)
     dim = betas[-1].shape[1]
     shapes = _build_shapes(dim)
 
@@ -128,7 +128,7 @@ def compute_cif_marginal_gap(x, betas, z, times, cause_compute = [1]):
  
     Returns a dict of three CIF-shaped DataFrames (MultiIndex columns: cause, time).
     """
-    causes = sorted(k for k in betas if k != -1)
+    causes = sorted(k for k in betas if k > 0)
     signal_dim = betas[-1].shape[1]
     shapes = _build_shapes(signal_dim)
  

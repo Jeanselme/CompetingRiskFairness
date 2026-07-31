@@ -45,6 +45,7 @@ for random_seed in seeds:
         'layers_surv':   layers,
         'layers':        layers,
         'act':           ['Tanh'],
+        'normalise':     ['minmax']
     }
     run(NFGExperiment,     'nfg',   e)
     run(NFGExperiment,     'nfgnc', (e == 1).astype(int))
@@ -58,6 +59,7 @@ for random_seed in seeds:
         'layers_surv':   layers,
         'layers':        layers,
         'act':           ['Tanh'],
+        'normalise':     ['minmax']
     }
     run(DeSurvExperiment,  'ds',   e)
     run(DeSurvExperiment,  'dsnc', (e == 1).astype(int))
