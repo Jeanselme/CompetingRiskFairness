@@ -31,7 +31,7 @@ for random_seed in seeds:
                 t.values.astype(float),
                 e.values.astype(int))
 
-    def run(Experiment, suffix, events):
+    def run(Experiment, suffix, events, param_grid):
         path = f'Results/generate_causes={args.causes}_seed={random_seed}_dim={args.dim}_{suffix}'
         Experiment.create(param_grid, k=1, n_iter=grid_search, path=path,
                           delete_log=True, random_seed=random_seed).train(x, t, events)
@@ -47,8 +47,8 @@ for random_seed in seeds:
         'act':           ['Tanh'],
         'normalise':     ['minmax']
     }
-    run(NFGExperiment,     'nfg',   e)
-    run(NFGExperiment,     'nfgnc', (e == 1).astype(int))
+    run(NFGExperiment,     'nfg',   e, param_grid)
+    run(NFGExperiment,     'nfgnc', (e == 1).astype(int), param_grid)
 
     # DeSurv
     param_grid = {
@@ -56,13 +56,14 @@ for random_seed in seeds:
         'learning_rate': [1e-3, 1e-4],
         'batch':         batch,
         'embedding':     [True],
+        'multihead':     [True],
         'layers_surv':   layers,
         'layers':        layers,
         'act':           ['Tanh'],
         'normalise':     ['minmax']
     }
-    run(DeSurvExperiment,  'ds',   e)
-    run(DeSurvExperiment,  'dsnc', (e == 1).astype(int))
+    run(DeSurvExperiment,  'ds',   e, param_grid)
+    run(DeSurvExperiment,  'dsnc', (e == 1).astype(int), param_grid)
 
     # DeepHit
     param_grid = {
@@ -72,5 +73,5 @@ for random_seed in seeds:
         'nodes':         layers,
         'shared':        layers,
     }
-    run(DeepHitExperiment, 'dh',   e)
-    run(DeepHitExperiment, 'dhnc', (e == 1).astype(int))
+    run(DeepHitExperiment, 'dh',   e, param_grid)
+    run(DeepHitExperiment, 'dhnc', (e == 1).astype(int), param_grid)
